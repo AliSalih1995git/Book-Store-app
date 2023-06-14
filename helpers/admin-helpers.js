@@ -1,23 +1,23 @@
-const db = require('../config/connection');
+const db = require("../config/connection");
 
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
-const adminDataModel = require('../models/admin');
-const category = require('../models/category');
-const Sub_Category = require('../models/sub_category');
-const userDataModel = require('../models/user');
-const multer = require('multer');
-const products = require('../models/products');
-const ordermodel = require('../models/order');
-const couponmodel = require('../models/Coupen');
-const Carouselmodel = require('../models/Carousel');
+const adminDataModel = require("../models/admin");
+const category = require("../models/category");
+const Sub_Category = require("../models/sub_category");
+const userDataModel = require("../models/user");
+const multer = require("multer");
+const products = require("../models/products");
+const ordermodel = require("../models/order");
+const couponmodel = require("../models/Coupen");
+const Carouselmodel = require("../models/Carousel");
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, './public/upload');
+    cb(null, "./public/upload");
   },
   filename: (req, file, cb) => {
-    cb(null, Date.now() + '--' + file.originalname);
+    cb(null, Date.now() + "--" + file.originalname);
   },
 });
 let upload = multer({
@@ -30,26 +30,22 @@ module.exports = {
       let response = {};
       const admin = await adminDataModel.findOne({ email: adminDataa.email });
       if (admin) {
-        console.log('admin Email true');
         bcrypt.compare(adminDataa.password, admin.password).then((result) => {
           if (result) {
-            console.log('admin login true');
             response.admin = admin;
             response.status = true;
             resolve(response);
           } else {
-            console.log('login error');
             reject({
               status: false,
-              msg: 'Your username or password is incorrect',
+              msg: "Your username or password is incorrect",
             });
           }
         });
       } else {
-        console.log('Login Failed');
         reject({
           status: false,
-          msg: 'Your username or password is incorrect',
+          msg: "Your username or password is incorrect",
         });
       }
     });
@@ -84,12 +80,11 @@ module.exports = {
   addcategory: (data, file) => {
     return new Promise(async (resolve, reject) => {
       const categoryname = data.category;
-      console.log(categoryname, 'add category');
       const categorydata = await category.findOne({
         categoryName: categoryname,
       });
       if (categorydata) {
-        reject({ status: false, msg: 'category already taken' });
+        reject({ status: false, msg: "category already taken" });
       } else {
         const addcategory = await new category({
           categoryName: categoryname,
@@ -98,7 +93,7 @@ module.exports = {
         await addcategory.save(async (err, res) => {
           if (err) {
           }
-          resolve({ data: res, msg: 'Success' });
+          resolve({ data: res, msg: "Success" });
         });
         resolve(addcategory);
       }
@@ -117,17 +112,16 @@ module.exports = {
         Sub_category: sub_categoryname,
       });
       if (sub_categorydata) {
-        reject({ status: false, msg: 'Sub category already taiken' });
+        reject({ status: false, msg: "Sub category already taiken" });
       } else {
         const addsubcategory = await new Sub_Category({
           Sub_category: sub_categoryname,
-         
         });
         await addsubcategory.save(async (err, result) => {
           if (err) {
-            reject({ msg: 'sub category not added' });
+            reject({ msg: "sub category not added" });
           } else {
-            resolve({ result, msg: 'subcategory' });
+            resolve({ result, msg: "subcategory" });
           }
         });
       }
@@ -157,7 +151,6 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       Mrp = parseInt(productData.Mrp);
       Prize = Mrp - (Mrp * productData.Discount * 0.01).toFixed(0);
-      console.log(Prize);
 
       const sub_categorydata = await Sub_Category.findOne({
         Sub_category: productData.subcategory,
@@ -180,7 +173,7 @@ module.exports = {
       await newproduct.save(async (err, res) => {
         if (err) {
         }
-        resolve({ data: res, msg: 'Success' });
+        resolve({ data: res, msg: "Success" });
       });
     });
   },
@@ -188,9 +181,9 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       const allproducts = products
         .find({})
-        .populate('category')
-        .populate('sub_cateogry')
-        .sort([['_id', -1]])
+        .populate("category")
+        .populate("sub_cateogry")
+        .sort([["_id", -1]])
         .limit(15)
         .lean();
       resolve(allproducts);
@@ -200,7 +193,7 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       const moreProducts = products
         .find({})
-        .populate('image.[0]')
+        .populate("image.[0]")
         .skip(8)
         .limit(10)
         .lean();
@@ -218,8 +211,8 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       const productDetails = await products
         .findOne({ _id: proId })
-        .populate('category')
-        .populate('sub_cateogry')
+        .populate("category")
+        .populate("sub_cateogry")
         .lean()
         .then((productDetails) => {
           resolve(productDetails);
@@ -253,7 +246,7 @@ module.exports = {
           },
         }
       );
-      resolve({ updateProduct, msg: 'You added product successfully!' });
+      resolve({ updateProduct, msg: "You added product successfully!" });
     });
   },
 
@@ -281,8 +274,8 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       const allorders = await ordermodel
         .find({})
-        .populate('product.pro_id')
-        .sort([['ordered_on', -1]])
+        .populate("product.pro_id")
+        .sort([["ordered_on", -1]])
         .lean();
       resolve(allorders);
     });
@@ -291,19 +284,18 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       const orderdetails = await ordermodel
         .findOne({ _id: orderID })
-        .populate('product.pro_id')
+        .populate("product.pro_id")
         .lean();
       resolve(orderdetails);
     });
   },
   changeOrderStatus: (data) => {
-    console.log(data);
     return new Promise(async (resolve, reject) => {
       const state = await ordermodel.findOneAndUpdate(
-        { _id: data.orderId, 'product.pro_id': data.proId },
+        { _id: data.orderId, "product.pro_id": data.proId },
         {
           $set: {
-            'product.$.status': data.orderStatus,
+            "product.$.status": data.orderStatus,
           },
         }
       );
@@ -338,7 +330,6 @@ module.exports = {
     });
   },
 
-  
   salesReport: (data) => {
     let response = {};
     let { startDate, endDate } = data;
@@ -348,7 +339,7 @@ module.exports = {
       d1 = new Date();
       d1.setDate(d1.getDate() - 7);
       d2 = new Date();
-      text = 'For the Last 7 days';
+      text = "For the Last 7 days";
     } else {
       d1 = new Date(startDate);
       d2 = new Date(endDate);
@@ -356,78 +347,101 @@ module.exports = {
     }
 
     const date = new Date(Date.now());
-    const month = date.toLocaleString('default', { month: 'long' });
+    const month = date.toLocaleString("default", { month: "long" });
 
     return new Promise(async (resolve, reject) => {
-      let salesReport = await ordermodel.aggregate([
-        {
-          $match: {
-            ordered_on: {
-              $lt: d2,
-              $gte: d1,
+      try {
+        let salesReport = await ordermodel.aggregate([
+          {
+            $match: {
+              ordered_on: {
+                $lt: d2,
+                $gte: d1,
+              },
             },
           },
-        },
-        {
-          $match: { status: 'placed' },
-        },
-        {
-          $group: {
-            _id: { $dayOfMonth: '$ordered_on' },
-            Total: { $sum: '$grandTotal' },
+          {
+            $match: { "product.status": "Order placed" },
           },
-        },
-      ]);
-
-      let categoryReport = await ordermodel.aggregate([
-        {
-          $match: { status: 'placed' },
-        },
-        {
-          $unwind: '$product',
-        },
-        {
-          $project: {
-            // brand: "$products.Name",
-            quantity: '$product.quantity',
+          {
+            $group: {
+              _id: { $dayOfMonth: "$ordered_on" },
+              Total: { $sum: "$grandTotal" },
+            },
           },
-        },
+        ]);
 
-        {
-          $group: {
-            _id: '$category',
-            totalAmount: { $sum: '$quantity' },
+        let categoryReport = await ordermodel.aggregate([
+          {
+            $match: { "product.status": "Order placed" },
           },
-        },
-        { $sort: { quantity: -1 } },
-        { $limit: 5 },
-      ]);
-      let orderCount = await ordermodel
-        .find({ date: { $gt: d1, $lt: d2 } })
-        .count();
-
-      let totalAmounts = await ordermodel.aggregate([
-        {
-          $match: { status: 'placed' },
-        },
-        {
-          $group: {
-            _id: null,
-            totalAmount: { $sum: '$grandTotal' },
+          {
+            $unwind: "$product",
           },
-        },
-      ]);
+          {
+            $lookup: {
+              from: "products",
+              localField: "product.pro_id",
+              foreignField: "_id",
+              as: "productDetails",
+            },
+          },
+          {
+            $unwind: "$productDetails",
+          },
+          {
+            $lookup: {
+              from: "categories",
+              localField: "productDetails.category",
+              foreignField: "_id",
+              as: "categoryDetails",
+            },
+          },
+          {
+            $unwind: "$categoryDetails",
+          },
+          {
+            $group: {
+              _id: "$categoryDetails.categoryName",
+              totalAmount: { $sum: "$product.quantity" },
+            },
+          },
+          { $sort: { totalAmount: -1 } },
+          { $limit: 5 },
+        ]);
 
-      response.salesReport = salesReport;
-      response.brandReport = categoryReport;
-      response.orderCount = orderCount;
-      response.totalAmountPaid = totalAmounts.totalAmount;
-      resolve(response);
+        let orderCount = await ordermodel.countDocuments({
+          ordered_on: { $gt: d1, $lt: d2 },
+        });
+
+        let totalAmounts = await ordermodel.aggregate([
+          {
+            $match: { "product.status": "Order placed" },
+          },
+          {
+            $group: {
+              _id: null,
+              totalAmount: { $sum: "$grandTotal" },
+            },
+          },
+        ]);
+
+        response.salesReport = salesReport;
+        response.categoryReport = categoryReport;
+        response.orderCount = orderCount;
+        response.totalAmountPaid =
+          totalAmounts.length > 0 ? totalAmounts[0].totalAmount : 0;
+        resolve(response);
+      } catch (error) {
+        reject(error);
+      }
     });
   },
+
   getOrderCount: () => {
     return new Promise(async (resolve, reject) => {
       const OrderCount = await ordermodel.find({}).count();
+      console.log(OrderCount, "OrderCount");
       resolve(OrderCount);
     });
   },

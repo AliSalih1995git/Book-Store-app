@@ -44,7 +44,7 @@ router.get("/adminDashboard", verifyadmin, async (req, res, next) => {
     adminHelper.getOrderCount(),
     adminHelper.getProductCount(),
   ]);
-  console.log("bbb", OrderCount);
+
   res.render("admin/admin-dashboard", {
     OrderCount,
     ProductCount,
@@ -79,15 +79,20 @@ router.get("/unblockUser/:id", (req, res) => {
 router.get("/productDetails", async (req, res) => {
   const products = await adminHelper.getallproducts();
   const alert = req.flash("msg");
-  res.render("admin/products-manege", { alert, products, layout: false });
+  res.render("admin/products-manege", {
+    admin: true,
+    alert,
+    products,
+    layout: false,
+  });
 });
 
 router.get("/addcategory", (req, res) => {
   adminHelper.getallcategory().then((allcategory) => {
-    console.log(allcategory);
     res.render("admin/add_category", {
       allcategory,
       layout: false,
+      admin: true,
       err1: req.session.loge,
       err2: req.session.loggE,
     });
@@ -97,7 +102,7 @@ router.get("/addcategory", (req, res) => {
 });
 
 router.post("/addcategory", adminHelper.upload.single("image"), (req, res) => {
-  console.log(req.file);
+  // console.log(req.file);
   adminHelper
     .addcategory(req.body, req.file)
     .then((Response) => {
@@ -164,7 +169,6 @@ router.post(
   async (req, res) => {
     let imageData = await adminHelper.getProductDetails();
     let main_img = req.file ? req.file.filename : imageData[0];
-    console.log(main_img);
     await adminHelper
       .updateProduct(req.params.id, req.body, main_img)
       .then((response) => {
@@ -176,6 +180,10 @@ router.post(
 router.get("/order-manegement", (req, res) => {
   adminHelper.allorders().then((response) => {
     const allorders = response;
+    // Format the date in orders
+    allorders.forEach((order) => {
+      order.ordered_on = order.ordered_on.toLocaleDateString();
+    });
     res.render("admin/order_manage", { allorders, admin: true, layout: false });
   });
 });
@@ -193,7 +201,11 @@ router.post("/changeOrderStatus", (req, res) => {
 router.get("/coupon-manegement", (req, res) => {
   adminHelper.getAllCoupons().then((response) => {
     const AllCoupons = response;
-    res.render("admin/coupen_manage", { AllCoupons, layout: false });
+    res.render("admin/coupen_manage", {
+      admin: true,
+      AllCoupons,
+      layout: false,
+    });
   });
 });
 
@@ -203,7 +215,6 @@ router.get("/deletecoupon/:id", (req, res) => {
     req.session.removedProduct = response;
     res.redirect("/admin/coupon-manegement");
   });
-  console.log(proId);
 });
 
 router.get("/addcoupon", (req, res) => {
@@ -214,42 +225,30 @@ router.post("/AddCoupon", (req, res) => {
     res.redirect("/admin/coupon-manegement");
   });
 });
-router.post("/getData", async (req, res) => {
-  console.log("getdata");
-  console.log(req.body);
 
+router.post("/getData", async (req, res) => {
   try {
     const date = new Date(Date.now());
     const month = date.toLocaleString("default", { month: "long" });
-    adminHelper.salesReport(req.body).then((data) => {
-      let pendingAmount = data.pendingAmount;
-      let salesReport = data.salesReport;
-      let brandReport = data.brandReport;
-      let orderCount = data.orderCount;
-      let totalAmountPaid = data.totalAmountPaid;
-      let dateArray = [];
-      let totalArray = [];
-      salesReport.forEach((s) => {
-        dateArray.push(`${month}-${s._id} `);
-        totalArray.push(s.total);
-      });
-      let categoryArray = [];
-      let sumArray = [];
-      brandReport.forEach((s) => {
-        categoryArray.push(s._id);
-        sumArray.push(s.totalAmount);
-      });
-      console.log("", categoryArray);
-      console.log("", totalArray);
-      res.json({
-        dateArray,
-        totalArray,
-        categoryArray,
-        sumArray,
-        orderCount,
-        totalAmountPaid,
-        pendingAmount,
-      });
+    const data = await adminHelper.salesReport(req.body);
+
+    const salesReport = data.salesReport;
+    const categoryReport = data.categoryReport;
+    const orderCount = data.orderCount;
+    const totalAmountPaid = data.totalAmountPaid;
+
+    const dateArray = salesReport.map((s) => `${month}-${s._id}`);
+    const totalArray = salesReport.map((s) => s.Total);
+    const categoryArray = categoryReport.map((s) => s._id);
+    const sumArray = categoryReport.map((s) => s.totalAmount);
+
+    res.json({
+      dateArray,
+      totalArray,
+      categoryArray,
+      sumArray,
+      orderCount,
+      totalAmountPaid,
     });
   } catch (error) {
     console.error(error);
@@ -259,11 +258,15 @@ router.post("/getData", async (req, res) => {
 router.get("/Carousel-manegement", (req, res) => {
   adminHelper.allCarousel().then((response) => {
     const Carousel = response;
-    res.render("admin/Carousel-manegement", { layout: false, Carousel });
+    res.render("admin/Carousel-manegement", {
+      admin: true,
+      layout: false,
+      Carousel,
+    });
   });
 });
 router.get("/addCarousel", (req, res) => {
-  res.render("admin/add_carousel", { layout: false });
+  res.render("admin/add_carousel", { admin: true, layout: false });
 });
 router.post("/AddCarousel", adminHelper.upload.single("image"), (req, res) => {
   adminHelper.addCarousel(req.body, req.file).then((Response) => {

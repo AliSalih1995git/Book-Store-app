@@ -9,23 +9,21 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>SB Admin 2 - Blank</title>
-
-    <!-- Custom fonts for this template-->
+    <title>User Management</title>
+    <!-- icons -->
+    <script src="https://kit.fontawesome.com/a04c146c8c.js" crossorigin="anonymous"></script>
+    <!-- Custom fonts for this template -->
     <link href="/admin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+
     <link
         href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
         rel="stylesheet">
 
-    <!-- Custom styles for this template-->
+    <!-- Custom styles for this template -->
     <link href="/admin/css/sb-admin-2.min.css" rel="stylesheet">
 
-    {{!-- addproducts form --}}
-    {{!--
-    <link href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    --}}
-    <script src="//netdna.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
-    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <!-- Custom styles for this page -->
+    <link href="/admin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 </head>
 
@@ -35,10 +33,10 @@
     <div id="wrapper">
 
         <!-- Sidebar -->
-        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordiEnd of Topbaron" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/admin/adminDashboard">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fa-thin fa-books"></i>
                 </div>
@@ -50,7 +48,7 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="/admin/adminDashboard">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -81,6 +79,11 @@
 
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item active">
+                <a class="nav-link" href="/admin/Carousel-manegement">
+                    <i class="fas fa-fw fa-tachometer-alt"></i>
+                    <span>MANAGE CAROUSEL</span></a>
+            </li>
+            <li class="nav-item active">
                 <a class="nav-link" href="/admin/manage-user">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>MANAGE USERS</span></a>
@@ -109,43 +112,7 @@
             <hr class="sidebar-divider">
 
             <!-- Heading -->
-            <div class="sidebar-heading">
-                Addons
-            </div>
 
-            <!-- Nav Item - Pages Collapse Menu -->
-            <li class="nav-item">
-                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages"
-                    aria-expanded="true" aria-controls="collapsePages">
-                    <i class="fas fa-fw fa-folder"></i>
-                    <span>Pages</span>
-                </a>
-                <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-                    <div class="bg-white py-2 collapse-inner rounded">
-                        <h6 class="collapse-header">Login Screens:</h6>
-                        <a class="collapse-item" href="/admin/admin_login">Login</a>
-                        <a class="collapse-item" href="forgot-password.html">Forgot Password</a>
-                        <div class="collapse-divider"></div>
-                        <h6 class="collapse-header">Other Pages:</h6>
-                        <a class="collapse-item" href="404.html">404 Page</a>
-
-                    </div>
-                </div>
-            </li>
-
-            <!-- Nav Item - Charts -->
-            <li class="nav-item">
-                <a class="nav-link" href="/adminDashboard">
-                    <i class="fas fa-fw fa-chart-area"></i>
-                    <span>Charts</span></a>
-            </li>
-
-            <!-- Nav Item - Tables -->
-            <li class="nav-item">
-                <a class="nav-link" href="/adminDashboard">
-                    <i class="fas fa-fw fa-table"></i>
-                    <span>Tables</span></a>
-            </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -155,14 +122,7 @@
                 <button class="rounded-circle border-0" id="sidebarToggle"></button>
             </div>
 
-            <!-- Sidebar Message -->
-            <div class="sidebar-card d-none d-lg-flex">
-                <img class="sidebar-card-illustration mb-2" src="/admin/img/undraw_rocket.svg" alt="...">
-                <p class="text-center mb-2"><strong>SB Admin Pro</strong> is packed with premium features, components,
-                    and more!</p>
-                <a class="btn btn-success btn-sm" href="https://startbootstrap.com/theme/sb-admin-pro">Upgrade to
-                    Pro!</a>
-            </div>
+
 
         </ul>
         <!-- End of Sidebar -->
@@ -350,18 +310,7 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Profile
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Settings
-                                </a>
-                                <a class="dropdown-item" href="#">
-                                    <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                                    Activity Log
-                                </a>
+
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="/admin/adminlogout" data-toggle="modal"
                                     data-target="#logoutModal">
@@ -379,62 +328,62 @@
                 <!-- Begin Page Content -->
                 <div class="row d-flex justify-content-start">
 
-        <!-- Page Heading -->
-        <div class="container mt-5 col-xl-6 col-lg-12 col-md-12 col-12">
-          <form class="text-center border border-light p-5" action="/admin/addcategory" method="post"
-            enctype="multipart/form-data">
+                    <!-- Page Heading -->
+                    <div class="container mt-5 col-xl-6 col-lg-12 col-md-12 col-12">
+                        <form class="text-center border border-light p-5" action="/admin/addcategory" method="post"
+                            enctype="multipart/form-data">
 
-            <p class="h4 mb-4">Enter Category</p>
+                            <p class="h4 mb-4">Enter Category</p>
 
-            <div class="form-row mb-4">
+                            <div class="form-row mb-4">
 
-            </div>
+                            </div>
 
-            <div class="form-row mb-4">
-              <div class="col">
-                <!-- category -->
-                <input type="text" id="defaultRegisterFormFirstName" class="form-control" placeholder="Category"
-                  name="category" required />
-              </div>
-              {{!-- image --}}
-              <div class="col">
-                <!-- image -->
-                <input type="file" id="defaultRegisterFormFirstName" class="form-control" placeholder="image"
-                  name="image">
-              </div>
-            </div>
-            <p style="color: red;">{{err2}}</p>
-            <button class="btn btn-info my-4 btn-block" type="submit">Submit</button>
+                            <div class="form-row mb-4">
+                                <div class="col">
+                                    <!-- category -->
+                                    <input type="text" id="defaultRegisterFormFirstName" class="form-control"
+                                        placeholder="Category" name="category" required />
+                                </div>
+                                {{!-- image --}}
+                                <div class="col">
+                                    <!-- image -->
+                                    <input type="file" id="defaultRegisterFormFirstName" class="form-control"
+                                        placeholder="image" name="image">
+                                </div>
+                            </div>
+                            <p style="color: red;">{{err2}}</p>
+                            <button class="btn btn-info my-4 btn-block" type="submit">Submit</button>
 
-          </form>
+                        </form>
 
-        </div>
+                    </div>
 
-        <div class="container mt-5 col-xl-6 col-lg-12 col-md-12 col-12 oder-2">
-          <form class="text-center border border-light p-5" action="/admin/addsubcategory" method="post">
+                    <div class="container mt-5 col-xl-6 col-lg-12 col-md-12 col-12 oder-2">
+                        <form class="text-center border border-light p-5" action="/admin/addsubcategory" method="post">
 
-            <p class="h4 mb-4">Enter Sub Category</p>
+                            <p class="h4 mb-4">Enter Sub Category</p>
 
-            <div class="form-row mb-4">
+                            <div class="form-row mb-4">
 
-            </div>
+                            </div>
 
-           
-            <div class="form-row mb-4">
-              <div class="col">
-                <!-- category -->
-                <input type="text" id="defaultRegisterFormFirstName" class="form-control"
-                  placeholder="Enter Sub-Category" name="Subcategory" required />
 
-              </div>
-            </div>
-            <p style="color: red;">{{err1}}</p>
-            <button class="btn btn-info my-4 btn-block" type="submit">Submit</button>
+                            <div class="form-row mb-4">
+                                <div class="col">
+                                    <!-- category -->
+                                    <input type="text" id="defaultRegisterFormFirstName" class="form-control"
+                                        placeholder="Enter Sub-Category" name="Subcategory" required />
 
-          </form>
-        </div>
+                                </div>
+                            </div>
+                            <p style="color: red;">{{err1}}</p>
+                            <button class="btn btn-info my-4 btn-block" type="submit">Submit</button>
 
-      </div>
+                        </form>
+                    </div>
+
+                </div>
                 <!-- /.container-fluid -->
 
             </div>
@@ -475,7 +424,7 @@
                 <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <a class="btn btn-primary" href="/admin/adminlogout">Logout</a>
                 </div>
             </div>
         </div>

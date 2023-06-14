@@ -30,6 +30,7 @@ module.exports = {
         userData.pw = await bcrypt.hash(userData.pw, 10);
         // userData.repw=await bcrypt.hash(userData.repw,10)
         const otpGenerator = await Math.floor(1000 + Math.random() * 9000);
+        console, log(otpGenerator, "OTPPPPPP");
         const newUser = await {
           name: userData.name,
           phoneNumber: userData.phone,
@@ -69,12 +70,9 @@ module.exports = {
             mailTransporter.sendMail(mailDetails, (err, Info) => {
               if (err) {
               } else {
-                console.log("email has been sent ", Info.response);
               }
             });
-          } catch (error) {
-            console.log(error.message);
-          }
+          } catch (error) {}
         }
         resolve(newUser);
       }
@@ -88,17 +86,14 @@ module.exports = {
       if (userdat) {
         bcrypt.compare(userDataa.pw, userdat.password).then((status) => {
           if (status) {
-            console.log("Login Succces");
             response.user = userdat;
             response.status = true;
             resolve(response);
           } else {
-            console.log("Login Failed");
             resolve({ status: false });
           }
         });
       } else {
-        console.log("Login email Failed");
         reject({ status: false });
       }
     });
@@ -107,7 +102,6 @@ module.exports = {
     return new Promise(async (resolve, reject) => {
       const user = await userDataModel.findOne({ email: resetData.email });
 
-      console.log(user);
       if (user) {
         const otpGenerator = await Math.floor(1000 + Math.random() * 9000);
         const newUser = await {
@@ -116,7 +110,6 @@ module.exports = {
           _id: user._id,
         };
         try {
-          console.log("wats the issue?");
           const mailTransporter = nodeMailer.createTransport({
             host: "smtp.gmail.com",
             service: "gmail",
@@ -148,7 +141,7 @@ module.exports = {
             if (err) {
               console.log(err);
             } else {
-              console.log("email has been sent ", Info.response);
+              console.log("email has been sent ");
             }
           });
         } catch (error) {
@@ -261,7 +254,6 @@ module.exports = {
     quantity = data.quantity;
     count = data.count;
     const procount = parseInt(count);
-    console.log(cart);
     return new Promise(async (resolve, response) => {
       if (count == -1 && quantity == 1) {
         await cartModel
@@ -287,7 +279,6 @@ module.exports = {
     });
   },
   subtotal: (user) => {
-    // console.log(user);
     let id = mongoose.Types.ObjectId(user);
     return new Promise(async (resolve, reject) => {
       const amount = await cartModel.aggregate([
@@ -507,9 +498,7 @@ module.exports = {
     });
   },
   validateCoupon: (data, userId) => {
-    console.log(data);
     return new Promise(async (resolve, reject) => {
-      console.log(data.coupon);
       obj = {};
 
       const coupon = await couponmodel.findOne({ couponCode: data.coupon });
@@ -522,12 +511,10 @@ module.exports = {
           if (checkUserUsed) {
             obj.couponUsed = true;
             obj.msg = " You Already Used A Coupon";
-            console.log(" You Already Used A Coupon");
             resolve(obj);
           } else {
             let nowDate = new Date();
             date = new Date(nowDate);
-            console.log(date);
             if (date <= coupon.expirationTime) {
               await couponmodel.updateOne(
                 { couponCode: data.coupon },
@@ -541,14 +528,12 @@ module.exports = {
               let total = parseInt(data.total);
               let percentage = parseInt(coupon.discount);
               let discoAmount = ((total * percentage) / 100).toFixed();
-              // console.log();
               obj.discoAmountpercentage = percentage;
               obj.total = total - discoAmount;
               obj.success = true;
               resolve(obj);
             } else {
               obj.couponExpired = true;
-              console.log("This Coupon Is Expired");
               resolve(obj);
             }
           }
@@ -607,14 +592,12 @@ module.exports = {
     });
   },
   getallorders: (user) => {
-    console.log(user);
     return new Promise(async (resolve, reject) => {
       const allorders = await ordermodel
         .find({ user_Id: user })
         .populate("product.pro_id")
         .sort({ _id: -1 })
         .lean();
-      console.log(allorders);
       resolve(allorders);
     });
   },
@@ -735,8 +718,6 @@ module.exports = {
         if (categoryFilter && subcategoryFilter) {
           let categoryid = mongoose.Types.ObjectId(categoryFilter);
           let subcategoryid = mongoose.Types.ObjectId(subcategoryFilter);
-          console.log(categoryid);
-          console.log(subcategoryid);
           result = await products.aggregate([
             {
               $match: { category: categoryid },
@@ -749,7 +730,6 @@ module.exports = {
               $match: { price: { $lt: price } },
             },
           ]);
-          console.log("1");
         } else if (categoryFilter) {
           let categoryid = mongoose.Types.ObjectId(categoryFilter);
           result = await products.aggregate([
@@ -760,8 +740,6 @@ module.exports = {
               $match: { price: { $lt: price } },
             },
           ]);
-          console.log("2");
-          console.log(result);
         } else if (subcategoryFilter) {
           let subcategoryid = mongoose.Types.ObjectId(subcategoryFilter);
           result = await products.aggregate([
@@ -772,14 +750,12 @@ module.exports = {
               $match: { price: { $lt: price } },
             },
           ]);
-          console.log("3");
         } else {
           result = await products.aggregate([
             {
               $match: { price: { $lt: price } },
             },
           ]);
-          console.log("4");
         }
         resolve(result);
       });
@@ -815,7 +791,6 @@ module.exports = {
     });
   },
   getByCategories: (catid) => {
-    console.log(catid);
     try {
       return new Promise(async (resolve, reject) => {
         let categoryid = mongoose.Types.ObjectId(catid);
